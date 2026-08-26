@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to nodus-a2a are documented here.
+All notable changes to nodus-a2a-wire are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -11,7 +11,41 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [0.1.0] — 2026-05-29
+## [0.1.0] — 2026-08-26
+
+First publish. The package existed and was complete since 2026-05-29 but **could
+not be published**: it declared the distribution name `nodus-a2a`, which is taken
+by a different first-party package.
+
+### Changed
+
+- **Distribution renamed `nodus-a2a` -> `nodus-a2a-wire`**, matching the repo.
+
+- **Python module renamed `nodus_a2a` -> `nodus_a2a_wire`.** Renaming the
+  distribution alone was not enough: the published `nodus-a2a` coordinator ships
+  a module *also* called `nodus_a2a`, so installing both wrote one over the
+  other. Measured before the fix — installing this package on top of the
+  published coordinator left `AgentCoordinator`, `AgentRegistry` and
+  `DeadLetterService` gone, with pip reporting success. Both now coexist.
+
+- **`nodus-lang` removed from `dependencies`.** Nothing here imports it: a host
+  constructs `A2AHttpServer` and wires it to their own
+  `NodusRuntime.tool_registry`, so the runtime arrives by injection. Verified by
+  installing with `--no-deps` into a clean venv and importing the full API with
+  nodus-lang absent. It is now a `dev` extra, for the one test that needs it.
+
+  The declaration had also pinned `nodus-lang>=4.0.0,<5.0.0`, which would have
+  excluded every 5.x release and violated the no-caps policy. The suite passes
+  188/188 against nodus-lang 5.5.0.
+
+- **Project URLs** now point at `Masterplanner25/nodus-a2a-wire` rather than the
+  coordinator's repo.
+
+See [nodus-lang#477](https://github.com/Masterplanner25/Nodus/issues/477).
+
+---
+
+## [0.1.0-unpublished] — 2026-05-29
 
 Initial release — prepare-not-publish (coordinated three-artifact launch with
 nodus-lang 4.0.0 and nodus-mcp 0.1.0).
@@ -41,7 +75,7 @@ nodus-lang 4.0.0 and nodus-mcp 0.1.0).
   no-task-emitted, no-kind-discriminator, no-legacy-wellknown, version-
   negotiation, codec-name-mapping, capability-honesty, and inversion-note.
 - **169 tests** (unit, transport, integration) with 93% source coverage.
-- **CLI entry-point** (`python -m nodus_a2a serve`) for smoke-testing
+- **CLI entry-point** (`python -m nodus_a2a_wire serve`) for smoke-testing
   connectivity and Agent Card serving.
 
 ### Design decisions
@@ -60,4 +94,4 @@ Card signing (D8a), extended/authenticated card (D8b), JSON-RPC binding,
 gRPC, OAuth2/OIDC/mTLS, tenant routing, 0.3 wire-dialect compatibility.
 See `docs/design/05-deferred-features.md` for the full inventory.
 
-[0.1.0]: https://github.com/Masterplanner25/nodus-a2a/releases/tag/v0.1.0
+[0.1.0]: https://github.com/Masterplanner25/nodus-a2a-wire/releases/tag/v0.1.0

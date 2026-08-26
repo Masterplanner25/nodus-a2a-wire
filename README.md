@@ -1,14 +1,43 @@
-<!-- Reconciled 2026-05-29: auth warning moved to top. Needs review before repo commit and push. -->
+# nodus-a2a-wire
 
-# nodus-a2a
+**A2A 1.0.0 (Linux Foundation) wire-protocol adapter for the [Nodus](https://github.com/Masterplanner25/Nodus) scripting language.**
 
-**A2A 1.0.0 (Linux Foundation) protocol adapter for the [Nodus](https://github.com/Masterplanner25/Nodus) scripting language.**
+`nodus-a2a-wire` exposes `std:tool`-registered tools from a Nodus runtime as an
+A2A message-only agent over HTTP+JSON/REST — agent cards, transport, and handler
+dispatch.
 
-nodus-a2a exposes `std:tool`-registered tools from a Nodus runtime as an A2A
-message-only agent over HTTP+JSON/REST.  It is the third artifact in the
-coordinated launch with **nodus-lang 4.0.0** and **nodus-mcp 0.1.0**.
+```bash
+pip install nodus-a2a-wire
+```
 
-> **Status:** v0.1.0 — prepared, not yet published (three-artifact launch).
+## Not to be confused with `nodus-a2a`
+
+Two different packages, and the names are close:
+
+| | What it is |
+|---|---|
+| **`nodus-a2a-wire`** (this one) | the **wire protocol** — `A2AHttpServer`, agent cards, HTTP+JSON transport |
+| [`nodus-a2a`](https://pypi.org/project/nodus-a2a/) | **coordination primitives** — `AgentRegistry`, `AgentCoordinator`, `DeadLetterService`, `StuckRunWatchdog` |
+
+They share no code and neither depends on the other. **Both can be installed
+together**: this package's Python module is `nodus_a2a_wire`, the other's is
+`nodus_a2a`.
+
+Until 0.1.0 was published this project declared the distribution name
+`nodus-a2a` *and* the module name `nodus_a2a`, which is why it could not be
+published at all — and why installing it alongside the coordinator would have
+silently replaced that package's API. See
+[nodus-lang#477](https://github.com/Masterplanner25/Nodus/issues/477).
+
+## Requirements
+
+**No runtime dependencies**, including nodus-lang. A host constructs
+`A2AHttpServer` in Python and wires it to their own `NodusRuntime.tool_registry`,
+so the runtime arrives by injection rather than by import.
+
+```bash
+pip install nodus-a2a-wire[flask]   # optional alternative transport backend
+```
 
 ---
 
@@ -24,7 +53,7 @@ config = ServerConfig(
 )
 ```
 
-Do not expose a nodus-a2a server to the internet without configuring `token_validator`.
+Do not expose a nodus-a2a-wire server to the internet without configuring `token_validator`.
 
 ---
 
@@ -48,7 +77,7 @@ See `docs/design/05-deferred-features.md` for the full inventory.
 
 ```python
 from nodus.runtime.embedding import NodusRuntime
-from nodus_a2a import A2AHttpServer, ServerConfig
+from nodus_a2a_wire import A2AHttpServer, ServerConfig
 
 # 1. Create a NodusRuntime and register tools via tool_registry
 runtime = NodusRuntime()
@@ -196,8 +225,8 @@ in v0.2, do **not** import the nodus-mcp no-park assertion.  See
 ## CLI
 
 ```
-python -m nodus_a2a --version
-python -m nodus_a2a serve --name "My Agent" --description "..." --port 8080
+python -m nodus_a2a_wire --version
+python -m nodus_a2a_wire serve --name "My Agent" --description "..." --port 8080
 ```
 
 The `serve` command starts a server with no tools — useful for smoke-testing

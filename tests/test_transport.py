@@ -9,10 +9,10 @@ from urllib.error import HTTPError
 
 import pytest
 
-from nodus_a2a.card import cache_agent_card
-from nodus_a2a.config import ServerConfig
-from nodus_a2a.errors import AuthError, VersionNotSupportedError
-from nodus_a2a.transport import (
+from nodus_a2a_wire.card import cache_agent_card
+from nodus_a2a_wire.config import ServerConfig
+from nodus_a2a_wire.errors import AuthError, VersionNotSupportedError
+from nodus_a2a_wire.transport import (
     A2AHttpServer,
     extract_bearer_token,
     handle_request,

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import pytest
 
-from nodus_a2a.codec import decode_message, encode_send_message_response
-from nodus_a2a.errors import ToolNotFoundError, ValidationError
-from nodus_a2a.handler import extract_tool_call, handle_send_message, make_error_message
-from nodus_a2a.message import (
+from nodus_a2a_wire.codec import decode_message, encode_send_message_response
+from nodus_a2a_wire.errors import ToolNotFoundError, ValidationError
+from nodus_a2a_wire.handler import extract_tool_call, handle_send_message, make_error_message
+from nodus_a2a_wire.message import (
     DataPart,
     Message,
     RawPart,

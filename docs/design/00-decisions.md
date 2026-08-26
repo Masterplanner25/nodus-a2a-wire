@@ -1,4 +1,4 @@
-# nodus-a2a v0.1 — Phase 0 Decisions
+# nodus-a2a-wire v0.1 — Phase 0 Decisions
 
 **Status:** SETTLED — all D1–D10 ratified 2026-05-29.
 **Target:** A2A Protocol **≥1.0.0, <2.0.0** (Linux Foundation); wire dialect 1.0.
@@ -47,7 +47,7 @@ prepare-not-release coordination. All inherited.
 **D5 — KEYSTONE: agent archetype = MESSAGE-ONLY for v0.1.** RATIFIED 2026-05-29.
 
 The proto pins the choice: `SendMessageResponse` is `oneof payload { Task task = 1;
-Message message = 2; }`. Message-only means nodus-a2a always returns a `Message`
+Message message = 2; }`. Message-only means nodus-a2a-wire always returns a `Message`
 carrying the std:tool result and NEVER persists a `Task`.
 
 Three independent lines of evidence:

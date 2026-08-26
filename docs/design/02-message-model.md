@@ -9,7 +9,7 @@
 
 ## 1. Overview
 
-This doc defines the Python-side message model for nodus-a2a: the internal data
+This doc defines the Python-side message model for nodus-a2a-wire: the internal data
 types for `Part`, `Message`, and `Role`; how those types map to and from the 1.0
 wire format; and how a `std:tool` call result is packaged into a response `Message`.
 
@@ -26,7 +26,7 @@ this doc relies on those findings.
 as a proper tagged union — four separate frozen dataclasses with a type alias:
 
 ```python
-# src/nodus_a2a/message.py
+# src/nodus_a2a_wire/message.py
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Union

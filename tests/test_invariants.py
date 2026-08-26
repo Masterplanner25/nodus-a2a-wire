@@ -71,8 +71,8 @@ def test_no_new_opcodes():
 
 def test_no_task_emitted():
     """D5: SendMessage response must be a Message, never a Task."""
-    from nodus_a2a.codec import encode_send_message_response, make_response_message
-    from nodus_a2a.message import Message, Role, TextPart
+    from nodus_a2a_wire.codec import encode_send_message_response, make_response_message
+    from nodus_a2a_wire.message import Message, Role, TextPart
 
     inbound = Message(
         message_id="inbound-001",
@@ -103,8 +103,8 @@ def test_no_task_emitted():
 
 def test_no_kind_discriminator():
     """D4b: no 'kind' field on any Part variant or response payload."""
-    from nodus_a2a.codec import encode_part, encode_send_message_response
-    from nodus_a2a.message import DataPart, Message, RawPart, Role, TextPart, UrlPart
+    from nodus_a2a_wire.codec import encode_part, encode_send_message_response
+    from nodus_a2a_wire.message import DataPart, Message, RawPart, Role, TextPart, UrlPart
 
     parts = [
         TextPart(text="hello"),
@@ -142,9 +142,9 @@ def test_no_kind_discriminator():
 
 def test_no_legacy_wellknown():
     """D4b: /.well-known/agent.json must NOT be served (0.3-era path)."""
-    from nodus_a2a.card import cache_agent_card
-    from nodus_a2a.config import ServerConfig
-    from nodus_a2a.transport import handle_request
+    from nodus_a2a_wire.card import cache_agent_card
+    from nodus_a2a_wire.config import ServerConfig
+    from nodus_a2a_wire.transport import handle_request
 
     config = ServerConfig(
         base_url="https://example.com",
@@ -178,8 +178,8 @@ def test_no_legacy_wellknown():
 
 def test_version_negotiation():
     """D4: A2A-Version != '1.0' must raise VersionNotSupportedError."""
-    from nodus_a2a.errors import VersionNotSupportedError
-    from nodus_a2a.transport import negotiate_version
+    from nodus_a2a_wire.errors import VersionNotSupportedError
+    from nodus_a2a_wire.transport import negotiate_version
 
     # 0.3 must be rejected
     with pytest.raises(VersionNotSupportedError, match="not supported"):
@@ -205,8 +205,8 @@ def test_version_negotiation():
 
 def test_codec_name_mapping_message():
     """Standing assertion: proto snake_case field names must not appear on the wire."""
-    from nodus_a2a.codec import encode_message, encode_part
-    from nodus_a2a.message import DataPart, Message, Role, TextPart
+    from nodus_a2a_wire.codec import encode_message, encode_part
+    from nodus_a2a_wire.message import DataPart, Message, Role, TextPart
 
     msg = Message(
         message_id="map-001",
@@ -246,8 +246,8 @@ def test_codec_name_mapping_message():
 
 def test_codec_name_mapping_part():
     """Part fields must use camelCase on the wire."""
-    from nodus_a2a.codec import encode_part
-    from nodus_a2a.message import RawPart, TextPart
+    from nodus_a2a_wire.codec import encode_part
+    from nodus_a2a_wire.message import RawPart, TextPart
 
     text_wire = encode_part(TextPart(text="hi", media_type="text/markdown"))
     assert "mediaType" in text_wire
@@ -262,8 +262,8 @@ def test_codec_roundtrip():
     """Decode then re-encode must produce an equivalent message."""
     import json
 
-    from nodus_a2a.codec import decode_message, encode_message
-    from nodus_a2a.message import Role
+    from nodus_a2a_wire.codec import decode_message, encode_message
+    from nodus_a2a_wire.message import Role
 
     wire_in = {
         "messageId": "rt-001",
@@ -294,8 +294,8 @@ def test_codec_roundtrip():
 
 def test_capability_honesty():
     """D5/D10: streaming, pushNotifications, extendedAgentCard must all be false."""
-    from nodus_a2a.card import build_agent_card
-    from nodus_a2a.config import ServerConfig
+    from nodus_a2a_wire.card import build_agent_card
+    from nodus_a2a_wire.config import ServerConfig
 
     config = ServerConfig(
         base_url="https://example.com",
@@ -326,8 +326,8 @@ def test_capability_honesty():
 
 def _make_transport_fixture():
     """Return (card_bytes, invoke, tool_names) for transport-layer assertions."""
-    from nodus_a2a.card import cache_agent_card
-    from nodus_a2a.config import ServerConfig
+    from nodus_a2a_wire.card import cache_agent_card
+    from nodus_a2a_wire.config import ServerConfig
     config = ServerConfig(
         base_url="https://example.com",
         agent_name="Phase H Invariant Agent",
@@ -344,7 +344,7 @@ def _make_transport_fixture():
 def test_no_task_emitted_via_transport():
     """D5: SendMessage over the transport layer must never emit a Task."""
     import json
-    from nodus_a2a.transport import handle_request
+    from nodus_a2a_wire.transport import handle_request
 
     card_bytes, invoke, tool_names = _make_transport_fixture()
 
@@ -381,7 +381,7 @@ def test_no_task_emitted_via_transport():
 def test_no_legacy_wellknown_and_correct_path_serves():
     """D4b: agent.json → 404; agent-card.json → 200. Both must hold simultaneously."""
     import json
-    from nodus_a2a.transport import handle_request
+    from nodus_a2a_wire.transport import handle_request
 
     card_bytes, invoke, tool_names = _make_transport_fixture()
     kwargs = dict(headers={}, body=b"", card_bytes=card_bytes,
@@ -407,8 +407,8 @@ def test_no_legacy_wellknown_and_correct_path_serves():
 def test_codec_name_mapping_agent_card():
     """AgentCard wire JSON must use camelCase throughout (no snake_case keys)."""
     import json
-    from nodus_a2a.card import build_agent_card, project_skill
-    from nodus_a2a.config import ServerConfig
+    from nodus_a2a_wire.card import build_agent_card, project_skill
+    from nodus_a2a_wire.config import ServerConfig
 
     config = ServerConfig(
         base_url="https://agent.example.com",
@@ -456,7 +456,7 @@ def test_codec_name_mapping_agent_card():
 def test_capability_honesty_via_wire_json():
     """D5/D10/D8b: capability flags must be False in the served wire JSON, not just the dict."""
     import json
-    from nodus_a2a.transport import handle_request
+    from nodus_a2a_wire.transport import handle_request
 
     card_bytes, invoke, tool_names = _make_transport_fixture()
     _, _, resp_body = handle_request(
