@@ -6,8 +6,8 @@ import json
 
 import pytest
 
-from nodus_a2a.card import build_agent_card, cache_agent_card, project_skill
-from nodus_a2a.config import ServerConfig
+from nodus_a2a_wire.card import build_agent_card, cache_agent_card, project_skill
+from nodus_a2a_wire.config import ServerConfig
 
 
 # ---------------------------------------------------------------------------

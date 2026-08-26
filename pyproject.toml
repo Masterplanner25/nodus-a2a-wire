@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "nodus-a2a"
+name = "nodus-a2a-wire"
 version = "0.1.0"
-description = "A2A 1.0.0 (LF) adapter for the Nodus scripting language"
+description = "A2A 1.0.0 (LF) wire-protocol adapter: agent cards, HTTP+JSON transport, handler dispatch"
 authors = [{name = "Shawn Knight"}]
 license = {file = "LICENSE"}
 readme = "README.md"
@@ -21,25 +21,39 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
 ]
-dependencies = [
-    "nodus-lang>=4.0.0,<5.0.0",
-]
+# No runtime dependencies. This adapter never imports nodus-lang: a host
+# constructs `A2AHttpServer` in Python and wires it to their own
+# `NodusRuntime.tool_registry`, so the runtime arrives by injection. Verified by
+# installing with `--no-deps` into a clean venv and importing the full API with
+# nodus-lang absent.
+#
+# It previously declared `nodus-lang>=4.0.0,<5.0.0`. The cap violated the
+# no-caps policy (2026-08-17) and would have excluded every 5.x release, but the
+# real defect was the dependency itself — nothing here imports it.
+dependencies = []
+
+[project.optional-dependencies]
+# nodus-lang is needed only by `tests/test_invariants.py::test_no_new_opcodes`,
+# which skips without it. Uncapped, per the policy above.
+dev = ["pytest>=8.0", "nodus-lang>=4.0.0"]
+# Optional alternative transport backend; the stdlib backend needs nothing.
+flask = ["flask>=3.0"]
 
 [project.urls]
-Homepage = "https://github.com/Masterplanner25/nodus-a2a"
-Repository = "https://github.com/Masterplanner25/nodus-a2a"
-Changelog = "https://github.com/Masterplanner25/nodus-a2a/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Masterplanner25/nodus-a2a-wire"
+Repository = "https://github.com/Masterplanner25/nodus-a2a-wire"
+Changelog = "https://github.com/Masterplanner25/nodus-a2a-wire/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/nodus_a2a"]
+packages = ["src/nodus_a2a_wire"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.coverage.run]
-source = ["src/nodus_a2a"]
-omit = ["src/nodus_a2a/__main__.py"]  # CLI entry-point; not exercised by unit tests
+source = ["src/nodus_a2a_wire"]
+omit = ["src/nodus_a2a_wire/__main__.py"]  # CLI entry-point; not exercised by unit tests
 
 [tool.coverage.report]
 fail_under = 80

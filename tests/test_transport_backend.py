@@ -30,9 +30,9 @@ import urllib.request
 
 import pytest
 
-from nodus_a2a.card import cache_agent_card
-from nodus_a2a.config import ServerConfig
-from nodus_a2a.transport import A2AHttpServer, handle_request
+from nodus_a2a_wire.card import cache_agent_card
+from nodus_a2a_wire.config import ServerConfig
+from nodus_a2a_wire.transport import A2AHttpServer, handle_request
 
 
 # ---------------------------------------------------------------------------
@@ -47,12 +47,12 @@ def _flask_available() -> bool:
 
 
 # ---------------------------------------------------------------------------
-# 1. Import-graph assertion: no flask anywhere in nodus_a2a
+# 1. Import-graph assertion: no flask anywhere in nodus_a2a_wire
 # ---------------------------------------------------------------------------
 
 def test_transport_uses_only_stdlib():
-    """nodus_a2a.transport must not import flask at any depth."""
-    import nodus_a2a.transport as transport_mod
+    """nodus_a2a_wire.transport must not import flask at any depth."""
+    import nodus_a2a_wire.transport as transport_mod
     # Collect all modules reachable from transport via its __dict__
     seen = set()
     queue = [transport_mod]
@@ -63,11 +63,11 @@ def test_transport_uses_only_stdlib():
             continue
         seen.add(name)
         assert "flask" not in name.lower(), (
-            f"Flask appeared in nodus_a2a.transport import graph: {name}"
+            f"Flask appeared in nodus_a2a_wire.transport import graph: {name}"
         )
         for attr in vars(mod).values():
             sub = getattr(attr, "__module__", None)
-            if sub and sub not in seen and sub.startswith("nodus_a2a"):
+            if sub and sub not in seen and sub.startswith("nodus_a2a_wire"):
                 spec = importlib.util.find_spec(sub)
                 if spec:
                     try:
@@ -77,17 +77,17 @@ def test_transport_uses_only_stdlib():
 
     flask_in_graph = [n for n in seen if "flask" in n.lower()]
     assert not flask_in_graph, (
-        f"Flask appeared in nodus_a2a import graph: {flask_in_graph}. "
+        f"Flask appeared in nodus_a2a_wire import graph: {flask_in_graph}. "
         "nodus-a2a must stay stdlib-only."
     )
 
 
 def test_no_flask_in_transport_module():
     """Source-level scan: 'flask' must not appear in transport.py source."""
-    import nodus_a2a.transport as mod
+    import nodus_a2a_wire.transport as mod
     source = inspect.getsource(mod)
     assert "flask" not in source.lower(), (
-        "The string 'flask' appeared in nodus_a2a/transport.py source. "
+        "The string 'flask' appeared in nodus_a2a_wire/transport.py source. "
         "nodus-a2a v0.1 uses stdlib http.server only."
     )
 
@@ -95,7 +95,7 @@ def test_no_flask_in_transport_module():
 def test_server_class_is_stdlib_threading_http_server():
     """A2AHttpServer must be backed by http.server.ThreadingHTTPServer, not Flask."""
     import http.server
-    import nodus_a2a.transport as mod
+    import nodus_a2a_wire.transport as mod
 
     # Verify the source refers to ThreadingHTTPServer
     source = inspect.getsource(mod)

@@ -22,8 +22,8 @@ from urllib.error import HTTPError
 
 import pytest
 
-from nodus_a2a.config import ServerConfig
-from nodus_a2a.transport import A2AHttpServer
+from nodus_a2a_wire.config import ServerConfig
+from nodus_a2a_wire.transport import A2AHttpServer
 
 
 # ---------------------------------------------------------------------------

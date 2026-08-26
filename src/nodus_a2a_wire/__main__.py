@@ -1,8 +1,8 @@
-"""CLI entry-point: python -m nodus_a2a
+"""CLI entry-point: python -m nodus_a2a_wire
 
 Commands:
-    python -m nodus_a2a --version
-    python -m nodus_a2a serve --name "..." --description "..." [options]
+    python -m nodus_a2a_wire --version
+    python -m nodus_a2a_wire serve --name "..." --description "..." [options]
 
 The serve command starts an A2A server with no tools registered.  In practice
 you will construct an A2AHttpServer in Python, wire it to your NodusRuntime,
@@ -22,7 +22,7 @@ from .transport import A2AHttpServer
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m nodus_a2a",
+        prog="python -m nodus_a2a_wire",
         description=(
             f"nodus-a2a {__version__} — A2A 1.0.0 adapter for Nodus {__version__}\n"
             "Serve nodus-lang std:tools over the A2A protocol."

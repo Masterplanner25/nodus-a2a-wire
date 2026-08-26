@@ -111,7 +111,7 @@ The Agent Card is assembled once at startup from:
 ```
 AgentCard.name               ←  config["agent_name"]       (required; operator-supplied)
 AgentCard.description        ←  config["agent_description"] (required; operator-supplied)
-AgentCard.version            ←  nodus_a2a.__version__       ("0.1.0")
+AgentCard.version            ←  nodus_a2a_wire.__version__       ("0.1.0")
 AgentCard.documentation_url  ←  config.get("documentation_url")  (optional)
 AgentCard.icon_url           ←  config.get("icon_url")           (optional)
 AgentCard.provider           ←  AgentProvider {

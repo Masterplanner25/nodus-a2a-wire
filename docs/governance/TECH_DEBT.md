@@ -1,6 +1,6 @@
 <!-- Authored by Codex during non coding session. Needs review before repo commit and push. -->
 
-# nodus-a2a Tech Debt
+# nodus-a2a-wire Tech Debt
 
 **Version:** 0.1.0
 **Status:** Working document
@@ -76,7 +76,7 @@ and `license-files`. These are required for a proper PyPI presentation.
 
 **Status:** v0.2 target (D9).
 **Description:** Only bearer token in v0.1. The A2A spec supports OAuth2, OIDC, mTLS.
-Production deployments that require OAuth cannot use nodus-a2a v0.1.
+Production deployments that require OAuth cannot use nodus-a2a-wire v0.1.
 **Doc:** `docs/design/05-deferred-features.md §3.8`
 
 ---
@@ -94,8 +94,8 @@ unsigned Agent Card (`signatures: []`).
 
 **Status:** Open. Create before production deployment.
 **Description:** No document covers monitoring, upgrade, failure handling, or troubleshooting
-for a deployed nodus-a2a server. The nodus-lang repo has an `OPERATOR_OR_EMBEDDER_RUNBOOK.md`
-for core embedding; nodus-a2a needs an equivalent for its server operation.
+for a deployed nodus-a2a-wire server. The nodus-lang repo has an `OPERATOR_OR_EMBEDDER_RUNBOOK.md`
+for core embedding; nodus-a2a-wire needs an equivalent for its server operation.
 **Fix:** Create `docs/operational/RUNBOOK.md` before v0.2.
 
 ---
